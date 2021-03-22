@@ -31,3 +31,65 @@ function getRandomSymbol(){
     const symbols='!@#$%^&*(){}[]=<>/,.';
     return symbols[randomIndex(symbols)];
 }
+
+// Object to store all the generator functions
+const randomFunc={
+    upper:getRandomUpper,
+    lower:getRandomLower,
+    number:getRandomNumber,
+    symbol:getRandomSymbol
+};
+
+const resultEl=document.querySelector(`#result`);
+const lengthEL=document.querySelector(`#length`);
+const uppercaseEL=document.querySelector(`#uppercase`);
+const lowercaseEL=document.querySelector(`#lowercase`);
+const numbersEL=document.querySelector(`#numbers`);
+const symbolsEL=document.querySelector(`#symbols`);
+const generateEL=document.querySelector(`#generate`);
+const clipboardEL=document.querySelector(`#clipboard`);
+
+// Generate Password function (function that accepts true/false values as well as a number as arguments)
+function generatePassword(upper, lower, number, symbol, length){
+    // Create password variable
+    let generatedPassword=``;
+    // Filter out unchecked types
+    // True and false values can be added together.  (True is 1, false is 0)
+    const typesCount=upper+lower+number+symbol;
+    // If the user has not selected any of the four options, then display alert and return an empty string from the function.
+    if (typesCount===0){
+        alert("Please select at least one option.");
+        return "";
+    }
+    let typesArr=[
+        [`upper`, upper]
+        [`lower`, lower]
+        [`number`, number]
+        [`symbol`, symbol]
+    ];
+    // The Filter method creates a new array with all the elements that pass the test implemented by the provided function
+    typesArr=typesArr.filter(item=>{
+        return item[1];
+    });
+    // Loop over the length, call the generator function for each checked type
+    // Building password with a for loop
+    for(i=0;i<length;i+=typesCount){
+        typesArr.forEach(type=>{
+            const funcName=type[0];
+            generatedPassword+=randomFunc[funcName]();
+        });
+    }
+    // Add the final password to the password variable and return it from the function, after removing extraneous characters.
+    return generatedPassword.slice(0,length);
+}
+
+// Event listener for when the "Generate Password" 
+generateEL.addEventListener(`click`, ()=>{
+    // Changing value from a string to a number
+    const length=parseInt(lengthEL.value);
+    // Checking if the following options/checkboxes are selected, setting the true/false values to variables.
+    const hasUpper=uppercaseEL.checked;
+    const hasLower=lowercaseEL.checked;
+    const hasNumbers=numbersEL.checked;
+    const hasSymbols=symbolsEL.checked;
+})
