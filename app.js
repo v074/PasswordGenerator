@@ -62,9 +62,9 @@ function generatePassword(upper, lower, number, symbol, length){
         return "";
     }
     let typesArr=[
-        [`upper`, upper]
-        [`lower`, lower]
-        [`number`, number]
+        [`upper`, upper],
+        [`lower`, lower],
+        [`number`, number],
         [`symbol`, symbol]
     ];
     // The Filter method creates a new array with all the elements that pass the test implemented by the provided function
@@ -92,4 +92,22 @@ generateEL.addEventListener(`click`, ()=>{
     const hasLower=lowercaseEL.checked;
     const hasNumbers=numbersEL.checked;
     const hasSymbols=symbolsEL.checked;
-})
+    resultEl.innerText=generatePassword(hasUpper, hasLower, hasNumbers, hasSymbols, length);
+});
+
+clipboardEL.addEventListener(`click`, ()=>{
+    const textArea=document.createElement(`textarea`);
+    const password=resultEl.innerText;
+    // If user clicks clipboard while no password is displayed, the function will end and nothing will be coied to the clipboard.
+    if(password===""){
+        alert(`Please generate a password first`);
+        return;
+    }
+    textArea.value=password;
+    const body=document.querySelector(`body`);
+    body.append(textArea);
+    textArea.select();
+    document.execCommand(`copy`);
+    textArea.remove();
+    alert(`Password has been copieed to the clipboard`);
+});
