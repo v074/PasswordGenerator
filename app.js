@@ -32,6 +32,38 @@ function getRandomSymbol(){
     return symbols[randomIndex(symbols)];
 }
 
+function getRandomArray(arr, val){
+    let check1=false;
+    let check2;
+    let count;
+    let newArr;
+    // Until an array including all the items is returned, loops.
+    while(!check1){
+        count=0;
+        newArr=[];
+        for (i=0;i<val;i++){
+            newArr.push(Math.floor(Math.random()*arr.length));
+        }
+        console.log(newArr);
+        for (i=0;i<arr.length;i++){
+            check2=false;
+            for(n=0;n<newArr.length;n++){
+                if(newArr[n]===i){
+                    check2=true;
+                }
+            }
+            if(check2===true){
+                count++;
+            }
+        }
+        if(count===arr.length){
+            check1=true;
+        }
+    }
+    console.log(newArr);
+    return newArr;
+}
+
 // Object to store all the generator functions
 const randomFunc={
     upper:getRandomUpper,
@@ -73,12 +105,19 @@ function generatePassword(upper, lower, number, symbol, length){
     });
     // Loop over the length, call the generator function for each checked type
     // Building password with a for loop
-    for(i=0;i<length;i+=typesCount){
-        typesArr.forEach(type=>{
-            const funcName=type[0];
-            generatedPassword+=randomFunc[funcName]();
-        });
-    }
+    
+    // for(i=0;i<length;i+=typesCount){
+    //     typesArr.forEach(type=>{
+    //         const funcName=type[0];
+    //         generatedPassword+=randomFunc[funcName]();
+    //     });
+    // }
+    const randomArr=getRandomArray(typesArr, length);
+    randomArr.forEach(type=>{
+        const funcName=typesArr[type][0];
+        generatedPassword+=randomFunc[funcName]();
+    })
+
     // Add the final password to the password variable and return it from the function, after removing extraneous characters.
     return generatedPassword.slice(0,length);
 }
